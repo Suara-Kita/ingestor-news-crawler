@@ -18,6 +18,14 @@ export async function fetchFeed(feed: Feed): Promise<RssArticle[]> {
   }));
 }
 
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 export function filterArticles(articles: RssArticle[]): RssArticle[] {
-  return articles.filter((a) => matchesFilter(a.title ?? '', a.contentSnippet ?? ''));
+  const cutoff = Date.now() - ONE_DAY_MS;
+  return articles.filter((a) => {
+    if (!a.pubDate) return false;
+    const pub = new Date(a.pubDate).getTime();
+    if (isNaN(pub) || pub < cutoff) return false;
+    return matchesFilter(a.title ?? '', a.contentSnippet ?? '');
+  });
 }
