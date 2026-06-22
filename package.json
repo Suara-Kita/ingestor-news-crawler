@@ -1,0 +1,29 @@
+{
+  "name": "news-crawler",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx/esm --test tests/feeds.test.ts tests/normalizer.test.ts tests/config.test.ts tests/summarizer.test.ts"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.5.0",
+    "dotenv": "^16.4.5",
+    "ioredis": "^5.4.1",
+    "jsdom": "^24.0.0",
+    "playwright": "^1.45.0",
+    "rss-parser": "^3.13.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^20.14.0",
+    "@types/uuid": "^9.0.8",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.2"
+  }
+}
