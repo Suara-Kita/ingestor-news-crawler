@@ -6,7 +6,6 @@ export const FEEDS: Feed[] = [
   { id: 'sinarharian',  name: 'Sinar Harian',            url: 'https://www.sinarharian.com.my/rssFeed/15' },
   { id: 'nst',          name: 'New Straits Times',       url: 'https://www.nst.com.my/feed' },
   { id: 'fmt',          name: 'Free Malaysia Today',     url: 'https://www.freemalaysiatoday.com/feed' },
-  { id: 'tmi',          name: 'The Malaysian Insight',   url: 'https://www.themalaysianinsight.com/feed' },
   { id: 'harakahdaily', name: 'Harakahdaily',            url: 'https://harakahdaily.net/feed/' },
 ];
 
