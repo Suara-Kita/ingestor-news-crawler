@@ -17,7 +17,6 @@ export interface Config {
   redisPort: number;
   redisPassword: string;
   queueVoterInputs: string;
-  pollIntervalMinutes: number;
   logLevel: string;
   openrouterBaseUrl: string;
   openrouterApiKey: string;

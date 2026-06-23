@@ -64,11 +64,20 @@ async function pollOnce(
   );
 }
 
+function msUntilNext9AM(): number {
+  const now = new Date();
+  const next = new Date(now);
+  next.setHours(9, 0, 0, 0);
+  if (next.getTime() <= now.getTime()) {
+    next.setDate(next.getDate() + 1);
+  }
+  return next.getTime() - now.getTime();
+}
+
 async function main(): Promise<void> {
   const config = loadConfig();
   const redis = getRedis(config);
   const browser = await initBrowser();
-  const intervalMs = config.pollIntervalMinutes * 60 * 1000;
 
   const shutdown = async () => {
     console.log('[news-crawler] shutting down...');
@@ -78,16 +87,22 @@ async function main(): Promise<void> {
   process.on('SIGTERM', shutdown);
   process.on('SIGINT', shutdown);
 
-  console.log(`[news-crawler] starting, polling every ${config.pollIntervalMinutes}min`);
   if (!config.openrouterApiKey) {
     console.warn('[news-crawler] OPENROUTER_API_KEY not set — summarization disabled, falling back to raw scraped text');
   }
 
+  console.log(`[poll] running immediately on startup`);
+  await pollOnce(redis, config, browser);
+  console.log(`[poll] cycle done`);
+
   while (true) {
+    const delay = msUntilNext9AM();
+    const nextRun = new Date(Date.now() + delay);
+    console.log(`[news-crawler] next fetch scheduled at ${nextRun.toLocaleString()} (in ${Math.round(delay / 60000)}min)`);
+    await new Promise((resolve) => setTimeout(resolve, delay));
     console.log(`[poll] cycle start at ${new Date().toISOString()}`);
     await pollOnce(redis, config, browser);
-    console.log(`[poll] cycle done, sleeping ${config.pollIntervalMinutes}min`);
-    await new Promise((resolve) => setTimeout(resolve, intervalMs));
+    console.log(`[poll] cycle done`);
   }
 }
 
